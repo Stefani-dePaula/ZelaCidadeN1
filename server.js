@@ -73,3 +73,42 @@ app.post("/incidentes", async (req, res) => {
     res.send(`Incidente novo registrado: ${tipo_problema} registrado na data ${data_registro} por ${nome_solicitante}`)
 })
 
+//Rota de Atualização
+
+app.put("/incidentes/:id", async (req, res) => {
+
+ //Pega o ID do incidente que vem pela URL (ex: /incidentes/4)
+const { id } = req.params;
+
+//Pega os novos dados enviados no corpo da requisição (O que será atualizado)
+const {descricao, prioridade, status_resolucao} = req.body;
+
+//Abre a coneção com o banco de dados
+const db = await criarBanco();
+
+await db.run(`
+    UPDATE incidentes 
+    SET descricao = ?, prioridade = ?, status_resolucao = ? 
+    WHERE id = ?`, [descricao, prioridade, status_resolucao, id]
+    )
+
+//Enviar uma resposta para o cliente
+res.send(`O incidente de  ${id} foi atualizado com sucesso!`)
+
+});
+
+
+//Rota de Remoção
+
+app.delete("/incidentes/:id", async (req, res) => {
+    const {id} = req.params;
+
+    //abre a conexão com o banco de dados
+    const db =await criarBanco()
+
+    await db.run(`
+    DELETE FROM incidentes WHERE id = ?    
+      `, [id])
+
+    res.send(` O incidente de ${id} foi removido com sucesso`)
+})
