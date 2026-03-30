@@ -5,7 +5,14 @@ const {criarBanco} = require('./database') //A chave que vai abrir a conexão co
 
 const app = express(); // Inicialização: Ligando o motor do servidor.
 
+const cors = require('cors') //importando o pacote que gerencia as permissões de acesso
+
+
+
+
 app.use(express.json()) //Tradutor: Configura o Express para entender dados enviados no formato JSON.
+
+app.use(cors()) //Ativando o CORS no servidor
 
 //Criando a Rota Principal/Rota Raiz
 
@@ -21,15 +28,14 @@ app.get('/', (req, res) => {
         `)
 });
 
-//Porta do Servidor
 
-const PORT = 3000; 
 
-//Ligando o Servidor
-app.listen(PORT,()=>{
-    console.log(`Servidor rodando em http://localhost:${PORT}`)
-    
-})
+
+
+
+
+
+
 
 
 //Rota de Listagem - Para buscar todos os problemas registrados
@@ -112,3 +118,15 @@ app.delete("/incidentes/:id", async (req, res) => {
 
     res.send(` O incidente de ${id} foi removido com sucesso`)
 })
+
+
+
+//Porta do Servidor
+
+//Criando uma variável inteligente para a porta
+const PORT = process.env.PORT || 3000; 
+
+//Ligando o Servidor
+app.listen(PORT,()=>{
+    console.log(`Servidor rodando em http://localhost:${PORT}`) 
+});
